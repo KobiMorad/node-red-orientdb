@@ -1,0 +1,175 @@
+
+<script type="text/javascript">
+
+
+        RED.nodes.registerType('database', {
+            category: 'orientdb',
+            color: '#a6bbcf',
+            defaults: {
+                name: {value: ""},
+                server: {value: "", type: "remote-server"},
+                db: {value: "", required: true}
+            },
+            inputs: 1,
+            outputs: 1,
+            icon: "db.png",
+            label: function () {
+                return this.name || "DB";
+            },
+            oneditprepare: function () {
+                var lastSelection = this.db;
+                $('#node-input-db').empty();
+
+                try {
+                        $.ajax({
+                            url: 'refresh/' + this.server + '/',
+                            dataType: 'json',
+                            success: function (results) {
+
+
+
+                                $.each(results, function (i, item) {
+                                        var optionItems = $('<option/>', {
+                                            value: item.name
+                                        }).text(item.name);
+
+                                        if (lastSelection === item.name){
+                                            $("#test1").text(item.name);
+                                            optionItems.prop('selected', true);
+                                        }
+
+                                        $('#node-input-db').append(optionItems);
+
+
+
+                                    }
+                                );
+
+                            },
+                            complete: function (results) {
+
+                            },
+                            error: function (results) {
+
+
+                            }
+
+                        })
+
+                }
+                catch (err) {
+                }
+
+                $("#node-input-server").change(function () {
+
+                    $('#node-input-db')
+                        .empty();
+                    try {
+                        var optionSelected = $(this).find("option:selected");
+                        if (optionSelected!==null) {
+                            var id = optionSelected.val();
+                            $.ajax({
+                                url: 'refresh/' + id + '/',
+                                dataType: 'json',
+                                success: function (results) {
+
+
+                                    $.each(results, function (i, item) {
+                                            var optionItems = $('<option/>', {
+                                                value: item.name
+                                            }).text(item.name);
+                                            $('#node-input-db').append(optionItems);
+                                        }
+                                    );
+
+                                },
+                                complete: function (results) {
+
+                                },
+                                error: function (results) {
+
+
+                                }
+
+                            })
+                        }
+
+                    }
+                    catch (err) {
+                    }
+                }
+                )
+
+
+
+        }});
+
+
+</script>
+
+<script type="text/x-red" data-template-name="database">
+
+
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-server"><i class="icon-bookmark"></i> Port</label>
+        <select  id="node-input-server" onchange="myFunction()"/>
+    </div>
+
+    <div class="form-row">
+          <label for="node-input-db"><i class="icon-tag"></i> Db</label>
+          <select  id="node-input-db" />
+
+    </div>
+<p id="test1">This is a paragraph.</p>
+
+</script>
+
+<script type="text/x-red" data-help-name="database">
+   <p>In order to work with an OrientDB database in your Node.js application, you need to initialize an instance of the Database API. This provides your application with the tools it needs to access, manipulate and otherwise interact with specific databases. The initialization process is handled through the Server API, which is here called server, by convention.</p>
+<h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">string | buffer</span>
+        </dt>
+        <dd> the payload of the message to publish. </dd>
+        <dt class="optional">topic <span class="property-type">string</span></dt>
+        <dd> the MQTT topic to publish to.</dd>
+    </dl>
+
+ <h3>Outputs</h3>
+     <ol class="node-ports">
+         <li>Standard output
+             <dl class="message-properties">
+                 <dt>payload <span class="property-type">string</span></dt>
+                 <dd>the standard output of the command.</dd>
+             </dl>
+         </li>
+         <li>Standard error
+             <dl class="message-properties">
+                 <dt>payload <span class="property-type">string</span></dt>
+                 <dd>the standard error of the command.</dd>
+             </dl>
+         </li>
+     </ol>
+
+<h3>Details</h3>
+    <p><code>msg.payload</code> is used as the payload of the published message.
+<pre>
+{
+  payload: {
+    cmd : "select * from V"
+  }
+}
+     </pre>
+<h3>References</h3>
+    <ul>
+        <li><a>Twitter API docs</a> - full description of <code>msg.tweet</code> property</li>
+        <li><a>GitHub</a> - the nodes github repository</li>
+    </ul>
+</script>
