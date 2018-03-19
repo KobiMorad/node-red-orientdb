@@ -1,0 +1,36 @@
+{
+  "name": "node-red-contrib-orientdb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express": "^4.11.1",
+    "@types/node": "^9.4.6",
+    "@types/node-red": "^0.17.1",
+    "@types/orientjs": "^3.0.3",
+    "express": "^4.16.2",
+    "jQuery-QueryBuilder": "^2.4.5",
+    "orientjs": "^2.2.7",
+    "tslint": "^5.9.1",
+    "typescript": "^2.7.2"
+  },
+  "keywords": [
+    "node-red",
+    "orient db"
+  ],
+  "repository": {
+      "type": "git",
+       "url": "git+https://github.com/KobiMorad/node-red-orientdb.git"
+  },
+  "node-red": {
+    "nodes": {
+      "remote-server": "orientdb/remote-server.js",
+      "database": "orientdb/database.js"
+    }
+  }
+}
